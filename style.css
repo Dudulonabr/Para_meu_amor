@@ -245,6 +245,16 @@ h2 {
   padding: 1rem;
 }
 
+.timeline-status {
+  min-height: 1.2rem;
+  color: var(--text-soft);
+  font-size: 0.86rem;
+}
+
+.timeline-status.error {
+  color: #ffb5ce;
+}
+
 .section-letter {
   text-align: center;
 }

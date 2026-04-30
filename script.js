@@ -13,6 +13,7 @@ const timelineForm = document.getElementById("timeline-form");
 const timelineDataInput = document.getElementById("timeline-data");
 const timelineTextoInput = document.getElementById("timeline-texto");
 const timelineListaDinamica = document.getElementById("timeline-lista-dinamica");
+const timelineStatus = document.getElementById("timeline-status");
 const recadosForm = document.getElementById("recados-form");
 const recadoDataInput = document.getElementById("recado-data");
 const recadoAutorInput = document.getElementById("recado-autor");
@@ -347,6 +348,12 @@ function salvarEventos(eventos) {
   localStorage.setItem(EVENTOS_STORAGE_KEY, JSON.stringify(eventos));
 }
 
+function setTimelineStatus(mensagem = "", erro = false) {
+  if (!timelineStatus) return;
+  timelineStatus.textContent = mensagem;
+  timelineStatus.classList.toggle("error", erro);
+}
+
 async function carregarEventosSupabase() {
   if (!supabaseClient) return [];
 
@@ -430,12 +437,19 @@ async function configurarTimelineDinamica() {
   timelineDataInput.addEventListener("click", abrirCalendarioTimeline);
   timelineDataInput.addEventListener("focus", abrirCalendarioTimeline);
 
-  let eventos = [];
+  const eventosLocais = obterEventosSalvos();
+  let eventos = [...eventosLocais];
+
   if (usandoSupabase) {
-    eventos = await carregarEventosSupabase();
-  } else {
-    eventos = obterEventosSalvos();
+    const eventosSupabase = await carregarEventosSupabase();
+    if (eventosSupabase.length) {
+      eventos = [...eventosSupabase, ...eventosLocais];
+      setTimelineStatus("");
+    } else if (!eventosLocais.length) {
+      setTimelineStatus("Nao consegui carregar os acontecimentos online agora.", true);
+    }
   }
+
   renderizarTimelineDinamica(eventos);
 
   timelineForm.addEventListener("submit", async (event) => {
@@ -451,13 +465,16 @@ async function configurarTimelineDinamica() {
       const salvo = await salvarEventoSupabase(novoEvento);
       if (salvo) {
         eventos.push(salvo);
+        setTimelineStatus("Acontecimento salvo online com sucesso!");
       } else {
         eventos.push(novoEvento);
         salvarEventos(eventos);
+        setTimelineStatus("Salvei localmente. Verifique a tabela/policies da timeline no Supabase.", true);
       }
     } else {
       eventos.push(novoEvento);
       salvarEventos(eventos);
+      setTimelineStatus("Salvei localmente neste navegador.");
     }
 
     renderizarTimelineDinamica(eventos);
