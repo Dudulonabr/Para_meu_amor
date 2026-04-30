@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Para meu amor - Heloisa Pedroso Vilicev</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <canvas id="bg-hearts" aria-hidden="true"></canvas>
+
+  <main id="app">
+    <section id="entrada" class="screen active">
+      <div class="card hero">
+        <p class="intro-line">Eu fiz isso pra você...</p>
+        <p class="intro-sub">Leia com calma, foi tudo pensado em você ❤️</p>
+        <button id="enter-btn" class="primary-btn glow-btn">Entrar</button>
+      </div>
+    </section>
+
+    <section id="conteudo" class="screen hidden">
+      <section class="card section-counter reveal">
+        <h2>Desde que você entrou na minha vida...</h2>
+        <div class="counter-wrap">
+          <div id="heart-beat" class="heart-beat" aria-hidden="true">❤️</div>
+          <div class="counter-grid">
+            <div class="counter-item">
+              <span id="dias">0</span>
+              <small>dias</small>
+            </div>
+            <div class="counter-item">
+              <span id="horas">0</span>
+              <small>horas</small>
+            </div>
+            <div class="counter-item">
+              <span id="minutos">0</span>
+              <small>minutos</small>
+            </div>
+            <div class="counter-item">
+              <span id="segundos">0</span>
+              <small>segundos</small>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card section-timeline reveal">
+        <h2>Nossos momentos</h2>
+        <div class="timeline">
+          <article class="timeline-item">
+            <div class="timeline-date">15 de março de 2026</div>
+            <p>Quando tudo começou…</p>
+          </article>
+          <article class="timeline-item">
+            <div class="timeline-date">21 de março de 2026</div>
+            <p>Nosso primeiro beijo ❤️</p>
+          </article>
+          <article class="timeline-item">
+            <div class="timeline-date">29 de março de 2026</div>
+            <p>Nossa primeira ida ao cinema juntos 🎬</p>
+          </article>
+          <article class="timeline-item">
+            <div class="timeline-date">03 de abril de 2026</div>
+            <p>Fui ao hospital te ver, quando você estava internada 🫶</p>
+          </article>
+          <article class="timeline-item">
+            <div class="timeline-date">11 de abril de 2026</div>
+            <p>Assistimos outro filme no cinema, juntinhos ❤️</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="card section-recados reveal">
+        <h2>Nossos recados no tempo</h2>
+        <p class="recados-subtitle">Um cantinho para guardar o que sentimos em cada fase da nossa história. 💌</p>
+
+        <form id="recados-form" class="recados-form">
+          <label class="recados-label" for="recado-data">Dia</label>
+          <input id="recado-data" class="recados-input" type="date" required>
+
+          <label class="recados-label" for="recado-autor">Quem escreveu</label>
+          <select id="recado-autor" class="recados-input" required>
+            <option value="">Selecione...</option>
+            <option value="Eduardo">Eduardo</option>
+            <option value="Heloisa">Heloisa</option>
+          </select>
+
+          <label class="recados-label" for="recado-assunto">Assunto</label>
+          <input
+            id="recado-assunto"
+            class="recados-input"
+            type="text"
+            placeholder="Ex: Nosso passeio especial"
+            maxlength="80"
+            required
+          >
+
+          <label class="recados-label" for="recado-texto">Recado</label>
+          <textarea
+            id="recado-texto"
+            class="recados-textarea"
+            placeholder="Escreva aqui o que você quer lembrar no futuro..."
+            maxlength="1200"
+            required
+          ></textarea>
+
+          <button type="submit" class="primary-btn recados-btn">Guardar recado</button>
+        </form>
+
+        <div id="recados-lista" class="recados-lista"></div>
+      </section>
+
+      <section class="card section-gallery reveal">
+        <h2>Nossos dias juntinhos</h2>
+        <p class="gallery-subtitle">Cada foto guarda um pedacinho da nossa história 💖</p>
+        <form id="fotos-form" class="fotos-form">
+          <label class="recados-label" for="foto-arquivo">Escolha a foto</label>
+          <input id="foto-arquivo" class="recados-input" type="file" accept="image/*" required>
+
+          <button type="submit" class="primary-btn recados-btn">Adicionar foto</button>
+          <p id="fotos-status" class="fotos-status"></p>
+        </form>
+
+        <div class="photo-grid">
+          <img src="fotos/foto-01.png" alt="Foto do casal 1" class="gallery-photo">
+          <img src="fotos/foto-02.png" alt="Foto do casal 2" class="gallery-photo">
+          <img src="fotos/foto-03.png" alt="Foto do casal 3" class="gallery-photo">
+          <img src="fotos/foto-04.png" alt="Foto do casal 4" class="gallery-photo">
+          <img src="fotos/foto-05.png" alt="Foto do casal 5" class="gallery-photo">
+          <img src="fotos/foto-06.png" alt="Foto do casal 6" class="gallery-photo">
+          <img src="fotos/foto-07.png" alt="Foto do casal 7" class="gallery-photo">
+          <img src="fotos/foto-08.png" alt="Foto do casal 8" class="gallery-photo">
+          <img src="fotos/foto-09.png" alt="Foto do casal 9" class="gallery-photo">
+          <img src="fotos/foto-10.png" alt="Foto do casal 10" class="gallery-photo">
+          <img src="fotos/foto-11.png" alt="Foto do casal 11" class="gallery-photo">
+          <img src="fotos/foto-12.png" alt="Foto do casal 12" class="gallery-photo">
+          <img src="fotos/foto-13.png" alt="Foto do casal 13" class="gallery-photo">
+          <img src="fotos/foto-14.png" alt="Foto do casal 14" class="gallery-photo">
+          <img src="fotos/foto-15.png" alt="Foto do casal 15" class="gallery-photo">
+          <img src="fotos/foto-16.png" alt="Foto do casal 16" class="gallery-photo">
+          <img src="fotos/foto-17.png" alt="Foto do casal 17" class="gallery-photo">
+          <img src="fotos/foto-18.png" alt="Foto do casal 18" class="gallery-photo">
+          <img src="fotos/foto-19.png" alt="Foto do casal 19" class="gallery-photo">
+          <img src="fotos/foto-20.png" alt="Foto do casal 20" class="gallery-photo">
+          <img src="fotos/foto-21.png" alt="Foto do casal 21" class="gallery-photo">
+          <img src="fotos/foto-22.png" alt="Foto do casal 22" class="gallery-photo">
+          <img src="fotos/foto-23.png" alt="Foto do casal 23" class="gallery-photo">
+          <img src="fotos/foto-24.png" alt="Foto do casal 24" class="gallery-photo">
+        </div>
+        <div id="photo-grid-extra" class="photo-grid photo-grid-extra"></div>
+      </section>
+
+      <section class="card section-letter reveal">
+        <button id="read-letter-btn" class="primary-btn glow-btn">Leia isso com carinho ❤️</button>
+        <div id="letter-container" class="letter-container hidden">
+          <article id="typed-letter" class="typed-letter"></article>
+          <div id="letter-finale" class="letter-finale hidden">
+            <div class="final-heart">❤️</div>
+            <p>Com todo carinho que existe em mim.</p>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <aside id="spotify-widget" class="spotify-widget" aria-label="Player da playlist">
+    <button id="spotify-toggle" class="spotify-toggle" aria-expanded="true" aria-controls="spotify-panel">
+      🎵
+    </button>
+
+    <div id="spotify-panel" class="spotify-panel">
+      <p class="spotify-title">Nossa playlist</p>
+      <iframe
+        class="spotify-mini-embed"
+        src="https://open.spotify.com/embed/playlist/1hEAjv3ebe0aVLtnWXK39d?utm_source=generator"
+        title="Playlist Nosso amor no Spotify"
+        loading="lazy"
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+      ></iframe>
+    </div>
+  </aside>
+
+  <div id="photo-modal" class="photo-modal hidden" aria-hidden="true">
+    <button id="photo-modal-close" class="photo-modal-close" aria-label="Fechar visualização">✕</button>
+    <img id="photo-modal-image" src="" alt="Foto ampliada">
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
