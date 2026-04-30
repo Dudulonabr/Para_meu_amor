@@ -9,6 +9,10 @@ const galleryPhotos = document.querySelectorAll(".gallery-photo");
 const photoModal = document.getElementById("photo-modal");
 const photoModalImage = document.getElementById("photo-modal-image");
 const photoModalClose = document.getElementById("photo-modal-close");
+const timelineForm = document.getElementById("timeline-form");
+const timelineDataInput = document.getElementById("timeline-data");
+const timelineTextoInput = document.getElementById("timeline-texto");
+const timelineListaDinamica = document.getElementById("timeline-lista-dinamica");
 const recadosForm = document.getElementById("recados-form");
 const recadoDataInput = document.getElementById("recado-data");
 const recadoAutorInput = document.getElementById("recado-autor");
@@ -30,6 +34,7 @@ const minutosEl = document.getElementById("minutos");
 const segundosEl = document.getElementById("segundos");
 
 const loveStartDate = new Date("2026-03-15T00:00:00");
+const EVENTOS_STORAGE_KEY = "nossos-eventos-v1";
 const RECADOS_STORAGE_KEY = "nossos-recados-v1";
 const RECADOS_JSON_PATH = "recados.json";
 const FOTOS_BUCKET = "fotos-casal";
@@ -325,6 +330,139 @@ function configurarGaleria() {
     if (event.key === "Escape" && !photoModal.classList.contains("hidden")) {
       fecharModal();
     }
+  });
+}
+
+function obterEventosSalvos() {
+  try {
+    const dados = localStorage.getItem(EVENTOS_STORAGE_KEY);
+    const eventos = dados ? JSON.parse(dados) : [];
+    return Array.isArray(eventos) ? eventos : [];
+  } catch (error) {
+    return [];
+  }
+}
+
+function salvarEventos(eventos) {
+  localStorage.setItem(EVENTOS_STORAGE_KEY, JSON.stringify(eventos));
+}
+
+async function carregarEventosSupabase() {
+  if (!supabaseClient) return [];
+
+  const { data, error } = await supabaseClient
+    .from("eventos_timeline")
+    .select("data, texto, criado_em")
+    .order("data", { ascending: true });
+
+  if (error || !Array.isArray(data)) {
+    return [];
+  }
+
+  return data.map((evento) => ({
+    data: evento.data,
+    texto: evento.texto,
+    criadoEm: evento.criado_em ?? Date.now(),
+  }));
+}
+
+async function salvarEventoSupabase(evento) {
+  if (!supabaseClient) return null;
+
+  const { data, error } = await supabaseClient
+    .from("eventos_timeline")
+    .insert([{ data: evento.data, texto: evento.texto }])
+    .select("data, texto, criado_em")
+    .single();
+
+  if (error || !data) return null;
+
+  return {
+    data: data.data,
+    texto: data.texto,
+    criadoEm: data.criado_em ?? Date.now(),
+  };
+}
+
+function renderizarTimelineDinamica(eventos) {
+  if (!timelineListaDinamica) return;
+  timelineListaDinamica.innerHTML = "";
+
+  const ordenados = [...eventos].sort((a, b) => new Date(a.data) - new Date(b.data));
+  const fragmento = document.createDocumentFragment();
+
+  ordenados.forEach((evento) => {
+    const item = document.createElement("article");
+    item.className = "timeline-item";
+
+    const data = document.createElement("div");
+    data.className = "timeline-date";
+    data.textContent = formatarDataRecado(evento.data);
+
+    const texto = document.createElement("p");
+    texto.textContent = evento.texto;
+
+    item.appendChild(data);
+    item.appendChild(texto);
+    fragmento.appendChild(item);
+  });
+
+  timelineListaDinamica.appendChild(fragmento);
+}
+
+async function configurarTimelineDinamica() {
+  if (!timelineForm || !timelineDataInput || !timelineTextoInput || !timelineListaDinamica) {
+    return;
+  }
+
+  timelineDataInput.value = new Date().toISOString().split("T")[0];
+
+  const abrirCalendarioTimeline = () => {
+    if (typeof timelineDataInput.showPicker === "function") {
+      try {
+        timelineDataInput.showPicker();
+      } catch (error) {
+        // Alguns navegadores bloqueiam sem gesto de usuario.
+      }
+    }
+  };
+
+  timelineDataInput.addEventListener("click", abrirCalendarioTimeline);
+  timelineDataInput.addEventListener("focus", abrirCalendarioTimeline);
+
+  let eventos = [];
+  if (usandoSupabase) {
+    eventos = await carregarEventosSupabase();
+  } else {
+    eventos = obterEventosSalvos();
+  }
+  renderizarTimelineDinamica(eventos);
+
+  timelineForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const data = timelineDataInput.value;
+    const texto = timelineTextoInput.value.trim();
+    if (!data || !texto) return;
+
+    const novoEvento = { data, texto, criadoEm: Date.now() };
+
+    if (usandoSupabase) {
+      const salvo = await salvarEventoSupabase(novoEvento);
+      if (salvo) {
+        eventos.push(salvo);
+      } else {
+        eventos.push(novoEvento);
+        salvarEventos(eventos);
+      }
+    } else {
+      eventos.push(novoEvento);
+      salvarEventos(eventos);
+    }
+
+    renderizarTimelineDinamica(eventos);
+    timelineTextoInput.value = "";
+    timelineTextoInput.focus();
   });
 }
 
@@ -734,6 +872,7 @@ async function init() {
   configurarEntrada();
   configurarGaleria();
   await configurarRecados();
+  await configurarTimelineDinamica();
   configurarFotos();
   configurarCarta();
   iniciarFundoCoracoes();

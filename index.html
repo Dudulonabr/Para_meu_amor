@@ -70,7 +70,23 @@
             <div class="timeline-date">11 de abril de 2026</div>
             <p>Assistimos outro filme no cinema, juntinhos ❤️</p>
           </article>
+          <div id="timeline-lista-dinamica"></div>
         </div>
+        <form id="timeline-form" class="timeline-form">
+          <label class="recados-label" for="timeline-data">Dia do acontecimento</label>
+          <input id="timeline-data" class="recados-input" type="date" required>
+
+          <label class="recados-label" for="timeline-texto">Acontecimento</label>
+          <textarea
+            id="timeline-texto"
+            class="recados-textarea"
+            maxlength="500"
+            placeholder="Ex: Nosso primeiro piquenique juntos 💕"
+            required
+          ></textarea>
+
+          <button type="submit" class="primary-btn recados-btn">Adicionar acontecimento</button>
+        </form>
       </section>
 
       <section class="card section-recados reveal">

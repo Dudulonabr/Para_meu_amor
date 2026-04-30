@@ -234,6 +234,17 @@ h2 {
   margin-bottom: 0.32rem;
 }
 
+.timeline-form {
+  width: min(700px, 96%);
+  margin: 0.8rem auto 0;
+  display: grid;
+  gap: 0.5rem;
+  background: rgba(255, 220, 235, 0.05);
+  border: 1px solid rgba(255, 204, 227, 0.2);
+  border-radius: 16px;
+  padding: 1rem;
+}
+
 .section-letter {
   text-align: center;
 }
